@@ -1,0 +1,191 @@
+showmail
+
+This program was written by Manfred Haertel, <Manfred.Haertel@rz-online.de>, 
+starting in November 1998. It is distributed under the GNU public license. 
+See COPYING for details.
+
+This small Linux program displays the number of mails on a pop server and 
+for each mail sender, subject, sending date and size and, optionally, asks you
+to if you want to delete this message directly on the server.
+
+This program or large parts of it will probably compile with no or minor 
+adaption on other operating systems, especially on those ending with the
+letter x. ;-) Starting with showmail 7.0, the program runs also under
+Windows using the Cygwin libraries. Starting with showmail 8.0, even better,
+it runs natively under Windows and can be compiled by the MinGW compiler.
+
+Starting with showmail 6.0 there is finally SSL support!
+
+NOTE: If you use the normal pop3 service (port 110), your password and your
+mails are sent in plain text over the Internet. When using the pop3s service 
+(port 995), the whole communication is encrypted, so this is now the 
+recommended way to use showmail (and it's only about half a second slower).
+Ask your email provider to support pop3s!
+
+IMPORTANT NOTE: You will need OpenSSL on your system for showmail to
+compile. Because SSL is now the recommended way to use showmail, I decided
+that SSL support is an integral part of showmail, not an option (doing it
+this way also the source code is easier and better to understand). This is
+not a problem, since OpenSSL is part of all Linux distributions and it is
+also available on Windows.
+
+Some words on certificates: Starting with showmail 6.3 there is a validation
+of the server certificate. This works only if you have installed the
+appropriate root CA certificates. Some root CA certs are delivered by the
+OpenSSL distribution, others need to be included manually. Note that YOU
+decide which root CA cert to trust by copying them to the certificate
+directory. Please lookup more information about root CA certs in the
+appropriate documentation and literature.
+
+Some servers use self signed certificates. This means, there is no proof
+from a third party on the identity of the server. showmail will report this.
+The problem here is that libssl sees this as an error and there may be other
+errors (e.g. certificate has expired) and only one, possibly the one about 
+the cert being self signed will be reported.
+
+There is a way to work around this: Starting with showmail 6.4 showmails
+downloads all server certificates to $HOME/.showmail/<servername>.pem . If
+you copy the self signed certificate to the root CA directory (and run
+c_rehash of course), the certificate will subsequently reported to be okay. 
+But note that this only proofs that the certificate has not changed, it 
+does not "magically" proof the identity of the server!
+
+Starting with showmail 6.5 there is SOCKS support for users behind a
+firewall with a SOCKS5 server. Ask your firewall admin to configure it to
+give you access to your POP server.
+
+You have to specify the node name of the socks server, followed by a greater 
+sign, followed by the node name of the actual pop3 server. Port socks (1080)
+is assumed on the socks server as default, if your socks server uses another
+port you can specify it after the socks server name, separated by a colon.
+
+You can also use the IP addresses rather than the node names.
+
+Since the greater sign is interpreted by the shell, you have to enclose this
+parameter. So valid examples for the syntax are
+"my-socks.my-domain.de>my-pop.pop-domain.de" ,
+"my-socks.my-domain.de:my-socks-port>my-pop.pop-domain.de" or
+"192.168.1.1>12.34.56.78" .
+
+This also works together with SSL!
+
+Note that neither SOCKS4 nor SOCKS5 with authentication are supported at the
+moment. SOCKS4 requires nodenames to be resolved by the client which makes
+actually no sense in most firewall environments, so I decided not to
+implement it. SOCKS5 with authentication may be implemented in the future,
+after I decided what is the best way to supply the logon credentials.
+
+Some words about a Windows version:
+
+From the beginning I was asked to produce a Windows version of the software.
+
+As a first step I implemented a WinMain() function using libwine on Linux, 
+starting with showmail 5.0 . The rest of the software was not ported at this
+time.
+
+The problem was: wine did evolve quickly, and so changes in the
+Makefile were required from time to time for WinMain() to compile. I
+couldn't catch up with that. So support for Wine was broken for a long time.
+
+Finally I noticed that it is not too hard to port showmail to the Cygwin
+system. So finally, starting with showmail 7.0 , showmail did run  as a Win32
+console application under Windows. It did not even require that a complete
+Cygwin system is installed under Windows, just cygwin1.dll and the OpenSSL
+libraries! I could even cross compile the Windows version from Linux! ;-)
+
+Starting with showmail 8.0 I switched from Cygwin to MinGW, so cygwin1.dll
+is no more required. Some adapations had to made, but not too much and part
+of the work could be delegated to GNU autoconf. I could even revive the old
+WinMain() code with very small adaptions to run under Windows. So under
+Windows, two programs are built now: showmail.exe as a console application
+and winshowmail.exe as a Windows application. Note that winshowmail.exe does
+not have an advanced interface, but anyway, it's a working Windows
+application. It may be improved in the future. On the other hand, the
+console application showmail.exe is compatible to the Linux version. And of 
+course, the source code can still be cross compiled under Linux with a MinGW
+cross compiler.
+
+For building, simply do 'configure', 'make' and 'make install' and you can 
+run the program.
+
+You must do a 'make install' to copy the images and libraries to system 
+directories. Do this as root to be sure you have the required privileges.
+
+The program takes five parameters:
+
+- server: the mail server, probably at your internet provider
+- protocol: currently only pop3 is supported
+- user: your username on the mail server
+- password: your password on the mail server
+- feature: show or delete
+
+If you use six parameters on the command line, the so called debug mode
+is entered and a lot of messages are displayed on your screen. You will
+not normally need this mode unless the programs continues to fail and
+you do not know why.
+
+There are three ways to specify the parameters, which can be combined:
+
+You can specify the parameters on the command line, in a .showmailrc file
+or you can be prompted for the parameters.
+
+A parameter which you do not want to specify on the command line or in
+the .showmailrc file should be specified as a dash sign. However, on the
+command line, you are also able to simply omit the parameters.
+
+Examples for specifying parameters on the command line:
+
+$ showmail mail.openssl.org pop3s secret.user - show
+$ showmail mail.microsoft.com pop3 Bill.Gates thisismypassword show
+$ showmail mail.kernel.org pop3 Linus.Torvalds - show
+$ showmail "socks.my-domain.de>mail.mail-domain.de" pop3s my.name - show
+$ showmail
+$ showmail - - - - delete
+$ showmail - - - - - debug
+
+Note that, if you specify a password on the command line other users may be
+able to see it with a ps command, so it may be smarter to use a dash here.
+
+A sample .showmailrc file is provided with this kit. Lines starting with
+hashes are comments and are ignored. The first five lines which are not
+comments are interpreted as parameters. Again, you can avoid specifying
+the parameter by using a dash sign.
+
+IMPORTANT NOTE: You are blamed for everything that happens if you write your
+password to the .showmailrc file. I strongly recommend you to use protection
+600 if you want to do this.
+
+If you specify a parameter in both the command line and the resource file,
+the parameter from the command line is used, so you can override your
+defaults. If a parameter is specified neither on the command line nor
+in the resource file, you are prompted for this parameter. If prompting
+is used for a password, echoing is disabled.
+
+showmail has three features, which you can specify as the fifth parameter: 
+show and delete.
+
+"show" simply shows you the most important headers of the mails which
+are currently stored on your mailserver.
+
+If you use the "delete" feature, this programs asks you after each message 
+whether you want to delete this message.
+
+Comments, suggestions and enhancements are welcome at
+<Manfred.Haertel@rz-online.de>.
+
+Thanks to John R. Schrader for many suggestions.
+
+PLEASE NOTE:
+
+- pop3s is the recommended way to use showmail. If you continue to use pop3,
+  it's your decision.
+- protocol names should be given as contained in /etc/services, normally
+  pop3 or pop3s (however, if they are not, pop3 and pop3s are mapped to 110
+  and 995, respectively)
+- use debug carefully because the whole communication process is
+  displayed, including the password
+- you are responsible for specifying a password in clear text on the
+  program line or in the resource file. I recommend to let showmail prompt
+  for the password, it is the most secure way.
+
+Have a lot of fun! ;-)

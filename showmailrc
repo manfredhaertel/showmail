@@ -1,0 +1,12 @@
+# sample .showmailrc
+# edit and copy to $HOME/.showmailrc
+# use protection 600 if this file contains a password!!!
+# note that I do *not* recommend to write a password in a .showmailrc file!!!
+# lines starting with hashes are comments
+# non comment-lines are: server, protocol, username, password, feature
+# if you do not want to specify a certain parameter, use a dash instead
+mail.your-provider.de
+pop3s
+yourname
+-
+show

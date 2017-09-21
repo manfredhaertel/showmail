@@ -1,0 +1,92 @@
+#                                               -*- Autoconf -*-
+# Process this file with autoconf to produce a configure script.
+
+AC_PREREQ(2.61)
+AC_INIT(SHOWMAIL, 9.0, Manfred.Haertel@rz-online.de)
+AC_CONFIG_SRCDIR([main.c])
+AC_CONFIG_HEADER([config.h])
+
+AC_GNU_SOURCE
+
+AC_SUBST(host)
+
+# Check for extensions.
+AC_OBJEXT
+AC_EXEEXT
+
+# Checks for programs.
+AC_PROG_CC
+AC_PROG_RANLIB
+AC_PROG_SED
+AC_PROG_INSTALL
+
+# Checks for switches.
+AC_ARG_WITH(cert-dir,
+    [  --with-cert-dir=DIR     Default cert verify dir],
+    [ AC_DEFINE_UNQUOTED([SSL_CERTS], "$withval", [Default cert verify dir] ) ]
+)
+AC_ARG_WITH(ssl-includes,
+    [  --with-ssl-includes=DIR OpenSSL include dir],
+    [ CPPFLAGS="$CPPFLAGS -I$withval" ]
+)
+AC_ARG_WITH(ssl-libs,
+    [  --with-ssl-libs=DIR     OpenSSL library dir],
+    [ LDFLAGS="$LDFLAGS -L$withval" ]
+)
+
+# Checks for libraries.
+AC_CHECK_LIB([gdi32], [main])
+AC_CHECK_LIB([wsock32], [main])
+AC_CHECK_LIB([crypto], [main])
+AC_CHECK_LIB([ssl], [main])
+AC_CHECK_LIB([ssl], [TLS_client_method], AC_DEFINE(HAVE_TLS_CLIENT_METHOD, 1, [TLS_client_method in libssl]))
+
+# Checks for header files.
+AC_HEADER_STDC
+AC_CHECK_HEADERS([arpa/inet.h conio.h fcntl.h limits.h netdb.h netinet/in.h stdlib.h string.h sys/socket.h sys/time.h termios.h unistd.h winsock.h])
+
+# Checks for typedefs, structures, and compiler characteristics.
+AC_HEADER_TIME
+AC_STRUCT_TM
+
+# Checks for library functions.
+AC_CHECK_FUNCS([getch gethostbyname gettimeofday mkdir socket strstr])
+
+# Checks for mkdir args.
+AC_CACHE_CHECK(for two arguments mkdir, ac_cv_two_arg_mkdir,
+AC_TRY_LINK([
+#include <fcntl.h>
+], 
+[mkdir("dummy",0700);], 
+ac_cv_two_arg_mkdir=yes,
+ac_cv_two_arg_mkdir=no)
+)
+if test "$ac_cv_two_arg_mkdir" = "yes"
+then
+	AC_DEFINE(HAVE_TWO_ARG_MKDIR, 1,[two arguments mkdir])
+fi
+
+AC_CACHE_CHECK(for one argument mkdir, ac_cv_one_arg_mkdir,
+AC_TRY_LINK([
+#include <fcntl.h>
+], 
+[mkdir("dummy");], 
+ac_cv_one_arg_mkdir=yes,
+ac_cv_one_arg_mkdir=no)
+)
+if test "$ac_cv_one_arg_mkdir" = "yes"
+then
+	AC_DEFINE(HAVE_ONE_ARG_MKDIR, 1,[one argument mkdir])
+fi
+
+AC_MSG_CHECKING([whether ${CC-c} accepts -fPIC])
+save_cflags="$CFLAGS"
+AS_IF([test "x$CFLAGS" = "x"], [CFLAGS="-fPIC"], [CFLAGS="$CFLAGS -fPIC"])
+AC_COMPILE_IFELSE([AC_LANG_SOURCE([int main(void) { return 0; }])],
+  [AS_IF([test "x$supported_cflags" = "x"], [supported_cflags="-fPIC"], [supported_cflags="$supported_cflags -fPIC"])
+   AC_MSG_RESULT([yes])],
+  [CFLAGS="$save_cflags"
+   AC_MSG_RESULT([no])])
+
+AC_CONFIG_FILES([Makefile])
+AC_OUTPUT

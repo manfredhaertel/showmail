@@ -1,0 +1,77 @@
+v1.0  04.11.1998  first really working version
+v2.0  17.11.1998  complete rework, mainly modularized source code
+v2.1  19.11.1998  more conservative error and debug handling
+v2.2  17.01.1999  creating libraries libshowmail.so and libshowmail.a
+                  implemented "make install"
+v2.3  17.03.1999  dynamic library version now default
+                  implemented pop3_rset
+                  moved error messages from pop3_dele to main  
+v2.4  21.03.1999  added error handler for pop3_top
+v3.0  09.04.1999  implented complain feature for spam mails
+v3.1  10.04.1999  some bugfixes for complain feature
+v3.2  17.04.1999  filter header for optical and security reasons
+                  added files "Changes" and "COPYING" to distribution
+v4.0  13.05.1999  added display of individual message sizes (pop3_list)
+                  added .showmailrc feature
+v4.1  15.05.1999  replaced nslookup by host in spamcomplain because this
+                  is faster due to less overhead
+v5.0  01.09.1999  implemented winmain on libwine
+v5.1  02.09.1999  fixed a bug in the error handling of winmain
+v5.2  02.09.1999  .showmailrc now also read by winmain
+v5.3  03.09.1999  fixed a scrolling bug in winmain and a documentation bug
+v5.4  05.09.1999  fixed two bugs in the makefile
+v5.5  18.09.1999  improved user interface (initial presence of dialog box 
+                  and handling of scrolling)
+v5.6  18.09.1999  fixed a bug in resize handling
+v5.7  16.11.1999  added possibility for the user to add additional
+                  qualifiers to the compiler using the environment variable
+                  CFLAGS
+v5.8  31.01.2000  adapted winshowmail for wine with elf dll's
+v5.9  01.05.2000  adapted winshowmail for wine with *.spec files
+v5.10 05.05.2000  create target directories if they do not exist
+                  simplified makefile for winshowmail
+v6.0  12.08.2001  added ssl support
+v6.1  13.08.2001  enhanced checks in configure script
+                  also some general cosmetic fixes in the source code
+v6.2  23.08.2001  support libssl also on non standard directories
+v6.3  25.08.2001  validate server certificate
+                  also changed layout of certificate display
+v6.4  26.08.2001  save the server cert locally
+                  also fixed a bug in make clean
+v6.5  28.08.2001  act as a socks5 client
+                  also fixed some minor bugs
+v6.6  01.09.2001  support upgrading to ssl via the stls command
+v6.7  05.09.2001  use library function for verify cert error string
+                  also cosmetic changes
+v6.8  06.09.2001  allow also numeric port numbers
+                  also cosmetic changes
+v6.9  13.09.2001  display fingerprint and dates
+v6.10 17.09.2001  fixed a bug in header handling
+v6.11 22.12.2002  fixed a bug in configure concerning some sed version
+                  also fixed a bug with very long headers found
+                  by Ulf M. Mueller (thanks a lot!)
+                  also fixed a bug with stls on silly servers
+v6.12 21.06.2005  fixes for newer linux distrubtions in the configure file
+                  (thanks to Tom Zorn who pointed out the problems)
+v7.0  14.08.2006  first support for windows using cygwin
+                  also some cleanups
+v7.1  15.08.2006  adapted also open_socks5.c for missing pop3 in
+                  /etc/services (as already in open_socket.c), needed for
+                  cygwin
+v8.0  26.03.2009  switched to GNU autoconf
+                  added native windows support (compiles using mingw)
+                  implemented base64 decoding in subject
+                  removed support for static linking
+                  removed the spam complain feature
+                  also did cosmetic adaptions and corrections here and there
+v9.0  17.09.2017  fixed install targets for 64 bit systems
+                  support for TLS methods
+                  versioned folder in tarball
+                  (all thanks to Johnny A. Solbu)
+                  use -fPIC if available
+                  fixed symbol names which caused warnings when using autotools
+                  used full prototypes
+                  fixed a typo in call to read_ssl from pop3_list 
+                  made ssl_method "const" to avoid warnings
+                  use modern function parameter declarations
+                  fixed issues with certificate details display

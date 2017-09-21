@@ -1,0 +1,144 @@
+SHELL = /bin/sh
+
+top_srcdir = @top_srcdir@
+srcdir = @srcdir@
+prefix = @prefix@
+exec_prefix = @exec_prefix@
+bindir = $(exec_prefix)/bin
+infodir = $(prefix)/info
+libdir = @libdir@
+mandir = $(prefix)/man/man1
+
+CC = @CC@
+CPPFLAGS = @CPPFLAGS@
+CFLAGS = $(CPPFLAGS) @CFLAGS@
+LDFLAGS = @LDFLAGS@
+LIBS = @LIBS@
+RANLIB = @RANLIB@
+SED = @SED@
+INSTALL = @INSTALL@
+PACKAGE_VERSION = @PACKAGE_VERSION@
+OBJEXT = @OBJEXT@
+EXEEXT = @EXEEXT@
+ifeq ($(EXEEXT),.exe)
+	SOEXT = dll
+	TARGETS = showmail$(EXEEXT) winshowmail$(EXEEXT)
+else
+	SOEXT = so
+	TARGETS = showmail$(EXEEXT)
+endif
+HOST = @host@
+ifeq ($(HOST),)
+	WINDRES = windres
+else
+	WINDRES = $(HOST)-windres
+endif
+
+all:
+	make $(TARGETS)
+
+showmail$(EXEEXT): main.$(OBJEXT) libshowmail.$(SOEXT)
+	$(CC) $(LDFLAGS) -Wl,--rpath,$(libdir) -o showmail$(EXEEXT) main.$(OBJEXT) -L. -lshowmail $(LIBS)
+
+install:
+	if [ -f showmail ] ; then \
+		$(INSTALL) -m 755 -D showmail $(DESTDIR)$(bindir)/showmail ; fi
+	if [ -f libshowmail.$(SOEXT) ] ; then \
+		$(INSTALL) -m 755 -D libshowmail.$(SOEXT) $(DESTDIR)$(libdir)/libshowmail.$(SOEXT) ; fi
+	if [ -f winshowmail  ] ; then \
+		$(INSTALL) -m 755 -D winshowmail $(prefix)/bin/winshowmail ; fi
+
+libshowmail.$(SOEXT): open_socket.$(OBJEXT) write_socket.$(OBJEXT) read_socket.$(OBJEXT) pop3_open.$(OBJEXT) \
+pop3_stat.$(OBJEXT) pop3_top.$(OBJEXT) pop3_close.$(OBJEXT) scan_header.$(OBJEXT) pop3_dele.$(OBJEXT) pop3_rset.$(OBJEXT) \
+pop3_list.$(OBJEXT) get_parameter.$(OBJEXT) \
+open_ssl.$(OBJEXT) close_ssl.$(OBJEXT) read_ssl.$(OBJEXT) write_ssl.$(OBJEXT) open_socks5.$(OBJEXT) set_debug.$(OBJEXT)
+	$(CC) -shared -o libshowmail.$(SOEXT) $(LDFLAGS) \
+                      open_socket.$(OBJEXT) write_socket.$(OBJEXT) read_socket.$(OBJEXT) \
+                      pop3_open.$(OBJEXT) pop3_stat.$(OBJEXT) pop3_top.$(OBJEXT) pop3_close.$(OBJEXT) \
+                      scan_header.$(OBJEXT) pop3_dele.$(OBJEXT) pop3_rset.$(OBJEXT) \
+	              pop3_list.$(OBJEXT) get_parameter.$(OBJEXT) \
+                      open_ssl.$(OBJEXT) close_ssl.$(OBJEXT) read_ssl.$(OBJEXT) write_ssl.$(OBJEXT) \
+		      open_socks5.$(OBJEXT) set_debug.$(OBJEXT) $(LIBS)
+
+main.$(OBJEXT): main.c showmail.h config.h
+	$(CC) $(CFLAGS) -c -Wall main.c
+
+open_socket.$(OBJEXT): open_socket.c showmail.h config.h
+	$(CC) $(CFLAGS) -c -Wall open_socket.c
+
+write_socket.$(OBJEXT): write_socket.c showmail.h config.h
+	$(CC) $(CFLAGS) -c -Wall write_socket.c
+
+read_socket.$(OBJEXT): read_socket.c showmail.h config.h
+	$(CC) $(CFLAGS) -c -Wall read_socket.c
+
+pop3_open.$(OBJEXT): pop3_open.c showmail.h config.h
+	$(CC) $(CFLAGS) -c -Wall pop3_open.c
+
+pop3_stat.$(OBJEXT): pop3_stat.c showmail.h config.h
+	$(CC) $(CFLAGS) -c -Wall pop3_stat.c
+
+pop3_top.$(OBJEXT): pop3_top.c showmail.h config.h
+	$(CC) $(CFLAGS) -c -Wall pop3_top.c
+
+pop3_close.$(OBJEXT): pop3_close.c showmail.h config.h
+	$(CC) $(CFLAGS) -c -Wall pop3_close.c
+
+scan_header.$(OBJEXT): scan_header.c showmail.h config.h
+	$(CC) $(CFLAGS) -c -Wall scan_header.c
+
+pop3_dele.$(OBJEXT): pop3_dele.c showmail.h config.h
+	$(CC) $(CFLAGS) -c -Wall pop3_dele.c
+
+pop3_rset.$(OBJEXT): pop3_rset.c showmail.h config.h
+	$(CC) $(CFLAGS) -c -Wall pop3_rset.c
+
+pop3_list.$(OBJEXT): pop3_list.c showmail.h config.h
+	$(CC) $(CFLAGS) -c -Wall pop3_list.c
+
+get_parameter.$(OBJEXT): get_parameter.c showmail.h config.h
+	$(CC) $(CFLAGS) -c -Wall get_parameter.c
+
+read_ssl.c: read_socket.c ssl.sed
+	$(SED) -f ssl.sed < read_socket.c > read_ssl.c
+
+write_ssl.c: write_socket.c ssl.sed
+	$(SED) -f ssl.sed < write_socket.c > write_ssl.c
+
+open_ssl.$(OBJEXT): open_ssl.c showmail.h config.h
+	$(CC) $(CFLAGS) -c -Wall open_ssl.c
+
+close_ssl.$(OBJEXT): close_ssl.c showmail.h config.h
+	$(CC) $(CFLAGS) -c -Wall close_ssl.c
+
+read_ssl.$(OBJEXT): read_ssl.c showmail.h config.h
+	$(CC) $(CFLAGS) -c -Wall read_ssl.c
+
+write_ssl.$(OBJEXT): write_ssl.c showmail.h config.h
+	$(CC) $(CFLAGS) -c -Wall write_ssl.c
+
+open_socks5.$(OBJEXT): open_socks5.c showmail.h config.h
+	$(CC) $(CFLAGS) -c -Wall open_socks5.c
+
+set_debug.$(OBJEXT): set_debug.c showmail.h config.h
+	$(CC) $(CFLAGS) -c -Wall set_debug.c
+
+clean:
+	rm -rf showmail showmail.exe *.o *.obj *.a *.so *.dll *~ core \
+		winshowmail winshowmail.exe *.s \
+		read_ssl.c write_ssl.c \
+		config.log config.status autom4te.cache
+
+dist:
+	make clean
+	rm -f Makefile config.h
+	cd .. ; tar --exclude=.git* --transform "s/^showmail/showmail-$(PACKAGE_VERSION)/" -cvvzf showmail-$(PACKAGE_VERSION).tar.gz showmail
+
+winshowmail$(EXEEXT): winmain.$(OBJEXT) winmainres.$(OBJEXT) libshowmail.$(SOEXT)
+	$(CC) $(LDFLAGS) -Wl,--rpath,$(prefix)/lib -o winshowmail$(EXEEXT) winmain.$(OBJEXT) winmainres.$(OBJEXT) -L. -lshowmail $(LIBS)
+
+winmain.$(OBJEXT): winmain.c showmail.h config.h
+	$(CC) $(CFLAGS) -c -Wall winmain.c
+
+winmainres.$(OBJEXT): winmainres.rc
+	$(WINDRES) -i winmainres.rc -o winmainres.$(OBJEXT)

@@ -1,0 +1,14 @@
+IMPORTANT NOTICE
+
+Please remember that export/import and/or use of strong cryptography
+software, providing cryptography hooks or even just commicating technical
+details about cryptography is illegal in some parts of the world. So, when
+you import this package to your country, re-distribute it from there or even
+just email technical suggestions or even source patches to the author or
+other people you are strongly adviced to pay close attention to any
+export/import and/or use laws which apply to you. Note also that some
+cryptographic routines are protected by patents in some countries and you
+need to acquire a license to use them. 
+
+The author of this software is not liable for any violations you make. 
+So be carefully yourself, it is your resposibility.
