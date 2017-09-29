@@ -30,7 +30,7 @@ int open_ssl ( int this_socket , char *server )
 	if ( debug )
 		gettimeofday ( &start_time , 0 ) ;
 
-	SSLeay_add_ssl_algorithms () ;
+	SSL_library_init () ;
 
 #ifdef HAVE_TLS_CLIENT_METHOD
 	ssl_method = TLS_client_method () ;
