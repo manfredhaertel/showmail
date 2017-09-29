@@ -184,8 +184,8 @@ int open_ssl ( int this_socket , char *server )
 	strcpy ( cert_issuer , cert_issuer_temp ) ;
 
 	printf ( "\n" ) ;
-	printf ( "Certificate Subject:\r\t\t\t\t\tCertificate Issuer:\n" ) ;
-	printf ( "====================\r\t\t\t\t\t===================\n" ) ;
+	printf ( "Certificate Subject:                    Certificate Issuer:\n" ) ;
+	printf ( "====================                    ===================\n" ) ;
 	
 	while ( ( strlen ( cert_subject ) > 0 ) ||
 	        ( strlen ( cert_issuer  ) > 0 ) )
@@ -221,7 +221,7 @@ int open_ssl ( int this_socket , char *server )
                         strcpy ( cert_subject , "" ) ;
 		}
                                                                                                 		
-		printf ( "\r\t\t\t\t\t" ) ;
+		printf ( "%*c" , 40 - strlen ( next_item ) , ' ' ) ;
 		
 		/* issuer */
 
