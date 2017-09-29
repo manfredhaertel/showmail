@@ -221,7 +221,7 @@ int open_ssl ( int this_socket , char *server )
                         strcpy ( cert_subject , "" ) ;
 		}
                                                                                                 		
-		printf ( "%*c" , 40 - strlen ( next_item ) , ' ' ) ;
+		printf ( "%*c" , 40 - (int) strlen ( next_item ) , ' ' ) ;
 		
 		/* issuer */
 
