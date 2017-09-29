@@ -115,7 +115,7 @@ int pop3_open ( char *host , char *protocol , char *user , char *password )
 		/* send stls command */
 		
 		write_socket ( this_socket , "stls" ) ;
-		usleep ( 100000 ) ;
+		nanosleep ( (const struct timespec[]) {{ 0 , 100000000 }} , NULL ) ;
 		read_socket ( this_socket , buffer , sizeof ( buffer ) ) ;
 		
 		if ( strncmp ( buffer , "+OK" , 3 ) == 0 )
