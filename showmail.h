@@ -78,7 +78,6 @@
 /* prototypes */
 
 int open_socket ( char *node_name , char *service_name ) ;
-int open_socket ( char *node_name , char *service_name ) ;
 void read_socket ( int this_socket , char *buffer , int size_of_buffer ) ;
 void write_socket ( int this_socket , char *buffer ) ;
 int pop3_open ( char *host , char *protocol , char *user , char *password ) ;
