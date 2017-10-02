@@ -81,3 +81,5 @@ v9.1  29.09.2017  showmail now available via github
 v9.2  30.09.2017  use SSL_library_init() rather than the obsolete
                   SSLeay_add_ssl_algorithms()
                   added a forgotten cast
+v9.3  02.10.2017  removed a duplicate prototype
+                  use sha256 rather than md5 for fingerprint
