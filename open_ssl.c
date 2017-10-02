@@ -266,10 +266,10 @@ int open_ssl ( int this_socket , char *server )
 	
 	/* fingerprint */
 	
-	if ( X509_digest ( server_cert , EVP_md5() , fingerprint , &length ) 
+	if ( X509_digest ( server_cert , EVP_sha256() , fingerprint , &length ) 
 	     != 0 )
 	{
-		printf ( "\nMD5 Fingerprint: " ) ;
+		printf ( "\nSHA256 Fingerprint: " ) ;
 		for ( counter = 0 ; counter < length ; counter ++ )
 		{
 			printf ( "%02x" , fingerprint [counter] ) ;
