@@ -4,9 +4,19 @@ This program was written by Manfred Haertel, <Manfred.Haertel@rz-online.de>,
 starting in November 1998. It is distributed under the GNU public license. 
 See COPYING for details.
 
-This small Linux program displays the number of mails on a pop server and 
-for each mail sender, subject, sending date and size and, optionally, asks you
-to if you want to delete this message directly on the server.
+This small Linux program displays the number of mails on a pop or imap server 
+and  for each mail sender, subject, sending date and size and, optionally, 
+asks you to if you want to delete this message directly on the server.
+
+showmail had a strong focus on pop3 from the beginning. However, starting
+with showmail 10.0, I implemented also imap support, with some small
+limitations in version 10.0, which will probably disappear during the
+next minor releases.
+
+Using imap, there is also support for different folders than the Inbox.
+Just append the greater sign and the folder name to the username, e.g.
+
+showmail - - myname>myfolder
 
 This program or large parts of it will probably compile with no or minor 
 adaption on other operating systems, especially on those ending with the

@@ -50,15 +50,17 @@ install:
 
 libshowmail.$(SOEXT): open_socket.$(OBJEXT) write_socket.$(OBJEXT) read_socket.$(OBJEXT) pop3_open.$(OBJEXT) \
 pop3_stat.$(OBJEXT) pop3_top.$(OBJEXT) pop3_close.$(OBJEXT) scan_header.$(OBJEXT) pop3_dele.$(OBJEXT) pop3_rset.$(OBJEXT) \
-pop3_list.$(OBJEXT) get_parameter.$(OBJEXT) \
+pop3_list.$(OBJEXT) imap_open.$(OBJEXT) imap_fetch_header.$(OBJEXT) imap_delete.$(OBJEXT) \
+imap_close.$(OBJEXT) get_parameter.$(OBJEXT) \
 open_ssl.$(OBJEXT) close_ssl.$(OBJEXT) read_ssl.$(OBJEXT) write_ssl.$(OBJEXT) open_socks5.$(OBJEXT) set_debug.$(OBJEXT)
 	$(CC) -shared -o libshowmail.$(SOEXT) $(LDFLAGS) \
                       open_socket.$(OBJEXT) write_socket.$(OBJEXT) read_socket.$(OBJEXT) \
                       pop3_open.$(OBJEXT) pop3_stat.$(OBJEXT) pop3_top.$(OBJEXT) pop3_close.$(OBJEXT) \
                       scan_header.$(OBJEXT) pop3_dele.$(OBJEXT) pop3_rset.$(OBJEXT) \
-	              pop3_list.$(OBJEXT) get_parameter.$(OBJEXT) \
+                      pop3_list.$(OBJEXT) imap_open.$(OBJEXT) imap_fetch_header.$(OBJEXT) \
+                      imap_delete.$(OBJEXT) imap_close.$(OBJEXT) get_parameter.$(OBJEXT) \
                       open_ssl.$(OBJEXT) close_ssl.$(OBJEXT) read_ssl.$(OBJEXT) write_ssl.$(OBJEXT) \
-		      open_socks5.$(OBJEXT) set_debug.$(OBJEXT) $(LIBS)
+                      open_socks5.$(OBJEXT) set_debug.$(OBJEXT) $(LIBS)
 
 main.$(OBJEXT): main.c showmail.h config.h
 	$(CC) $(CFLAGS) -c -Wall main.c
@@ -83,6 +85,18 @@ pop3_top.$(OBJEXT): pop3_top.c showmail.h config.h
 
 pop3_close.$(OBJEXT): pop3_close.c showmail.h config.h
 	$(CC) $(CFLAGS) -c -Wall pop3_close.c
+
+imap_open.$(OBJEXT): imap_open.c showmail.h config.h
+	$(CC) $(CFLAGS) -c -Wall imap_open.c
+
+imap_fetch_header.$(OBJEXT): imap_fetch_header.c showmail.h config.h
+	$(CC) $(CFLAGS) -c -Wall imap_fetch_header.c
+
+imap_delete.$(OBJEXT): imap_delete.c showmail.h config.h
+	$(CC) $(CFLAGS) -c -Wall imap_delete.c
+
+imap_close.$(OBJEXT): imap_close.c showmail.h config.h
+	$(CC) $(CFLAGS) -c -Wall imap_close.c
 
 scan_header.$(OBJEXT): scan_header.c showmail.h config.h
 	$(CC) $(CFLAGS) -c -Wall scan_header.c

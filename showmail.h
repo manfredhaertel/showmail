@@ -67,6 +67,8 @@
 #define SHOWMAIL_SOCKET_ERROR -1
 #define POP3_SUCCESS 0
 #define POP3_ERROR -1
+#define IMAP_SUCCESS 0
+#define IMAP_ERROR -1
 #define CR '\r'
 #define LF '\n'
 #define TAB '\t'
@@ -88,6 +90,10 @@ void pop3_close ( int this_socket ) ;
 int pop3_dele ( int this_socket , int index ) ;
 int pop3_rset ( int this_socket ) ;
 int pop3_list ( int this_socket , int index , int *size ) ;
+int imap_open ( char *host , char *protocol , char *user , char *password , int *number_of_mails ) ;
+int imap_fetch_header ( int this_socket , int index , char *header ) ;
+int imap_delete ( int this_socket , int index ) ;
+void imap_close ( int this_socket ) ;
 void get_parameter ( int argc , char **argv , char *server , char *protocol , char *user , char *password , char *feature ) ;
 int open_ssl ( int this_socket , char *server ) ;
 void close_ssl ( SSL *ssl_connection , SSL_CTX *ssl_context ) ;
@@ -100,6 +106,8 @@ void set_debug ( int debug_value ) ;
 
 int debug ;
 int is_pop3s ;
+int is_imaps ;
 SSL *this_ssl_connection ;
 SSL_CTX *this_ssl_context ;
 char homedir[MAXSTRING] ;
+int imap_seq_number ;

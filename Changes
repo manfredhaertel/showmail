@@ -83,3 +83,4 @@ v9.2  30.09.2017  use SSL_library_init() rather than the obsolete
                   added a forgotten cast
 v9.3  02.10.2017  removed a duplicate prototype
                   use sha256 rather than md5 for fingerprint
+v10.0 29.10.2017  implemented imap
