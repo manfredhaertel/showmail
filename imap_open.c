@@ -10,7 +10,8 @@ int imap_open ( char *host , char *protocol , char *user , char *password , int 
 	char loginstring [MAXSTRING] ;
 	char selectstring [MAXSTRING] ;
 	char okstring [MAXSTRING] ;
-	char errorstring [MAXSTRING] ;
+	char errorstring1 [MAXSTRING] ;
+	char errorstring2 [MAXSTRING] ;
 	int ssl_okay ;
 	char real_host [MAXSTRING] ;
 	char real_protocol [MAXSTRING] ;
@@ -206,7 +207,8 @@ int imap_open ( char *host , char *protocol , char *user , char *password , int 
 	
 	sprintf ( selectstring , "a%03d select %s" , imap_seq_number , folder ) ;
         sprintf ( okstring , "a%03d OK " , imap_seq_number ) ;
-        sprintf ( errorstring , "a%03d NO " , imap_seq_number ) ;                
+        sprintf ( errorstring1 , "\r\na%03d NO " , imap_seq_number ) ;                
+        sprintf ( errorstring2 , "\r\na%03d BAD " , imap_seq_number ) ;                
 	imap_seq_number ++ ;
 	
 	if ( is_imaps )
@@ -233,7 +235,10 @@ int imap_open ( char *host , char *protocol , char *user , char *password , int 
                               
                 /* return error code if this command fails */
                 
-                if ( strstr ( buffer , errorstring ) != NULL )
+                if ( ( strstr ( buffer , errorstring1 ) != NULL ) ||
+                     ( strstr ( buffer , errorstring2 ) != NULL ) ||
+                     ( strncmp ( buffer , errorstring1 + 2 , strlen ( errorstring1 ) - 2 ) == 0 ) ||
+                     ( strncmp ( buffer , errorstring2 + 2 , strlen ( errorstring2 ) - 2 ) == 0 ) )
                 	return SHOWMAIL_SOCKET_ERROR ;
 	}
 	while ( ( strstr ( buffer , okstring ) == NULL ) && 
