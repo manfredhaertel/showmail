@@ -1,27 +1,27 @@
-/* function imap_delete - delete certain message */
+/* function imap_expunge - purge deleted message */
 
 #include "showmail.h"
 
-int imap_delete ( int this_socket , int index )
+int imap_expunge ( int this_socket )
 {
-	char storestring [MAXSTRING] ;
+	char expungestring [MAXSTRING] ;
 	char okstring [MAXSTRING] ;
 	char errorstring1 [MAXSTRING] ;
 	char errorstring2 [MAXSTRING] ;
 	char buffer [MAXBUF] ;
 
-	/* only set deleted flag here */
+	/* purge messages flagged as deleted */
 
-	sprintf ( storestring , "a%03d store %d +flags \\Deleted" , imap_seq_number , index ) ;
+	sprintf ( expungestring , "a%03d expunge" , imap_seq_number ) ;
 	sprintf ( okstring , "a%03d OK " , imap_seq_number ) ;
 	sprintf ( errorstring1 , "\r\na%03d NO " , imap_seq_number ) ;
 	sprintf ( errorstring2 , "\r\na%03d BAD " , imap_seq_number ) ;
 	imap_seq_number ++ ;
 
 	if ( is_imaps )
-		write_ssl ( this_ssl_connection , storestring ) ;
+		write_ssl ( this_ssl_connection , expungestring ) ;
 	else
-		write_socket ( this_socket , storestring ) ;
+		write_socket ( this_socket , expungestring ) ;
 
 	/* we read until OK comes */
 

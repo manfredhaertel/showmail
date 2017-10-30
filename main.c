@@ -119,6 +119,11 @@ int main ( int argc , char **argv )
                         		  counter ) ;
                         }
                 }
+                
+                /* if message were deleted, purge them from the mailbox now */
+                
+                if ( feature[0] == 'd' )
+                        imap_expunge ( this_socket ) ;
         
                 imap_close ( this_socket ) ;
         }
