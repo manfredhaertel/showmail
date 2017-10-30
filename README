@@ -16,7 +16,7 @@ next minor releases.
 Using imap, there is also support for different folders than the Inbox.
 Just append the greater sign and the folder name to the username, e.g.
 
-showmail - - myname>myfolder
+showmail - - "myname>myfolder"
 
 This program or large parts of it will probably compile with no or minor 
 adaption on other operating systems, especially on those ending with the
@@ -148,6 +148,8 @@ Examples for specifying parameters on the command line:
 $ showmail mail.openssl.org pop3s secret.user - show
 $ showmail mail.microsoft.com pop3 Bill.Gates thisismypassword show
 $ showmail mail.kernel.org pop3 Linus.Torvalds - show
+$ showmail mail.myimap.de imap myname - show
+$ showmail mail.myimap.de imaps "myname>Junk" - delete
 $ showmail "socks.my-domain.de>mail.mail-domain.de" pop3s my.name - show
 $ showmail
 $ showmail - - - - delete
