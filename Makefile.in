@@ -50,7 +50,7 @@ install:
 
 libshowmail.$(SOEXT): open_socket.$(OBJEXT) write_socket.$(OBJEXT) read_socket.$(OBJEXT) pop3_open.$(OBJEXT) \
 pop3_stat.$(OBJEXT) pop3_top.$(OBJEXT) pop3_close.$(OBJEXT) scan_header.$(OBJEXT) pop3_dele.$(OBJEXT) pop3_rset.$(OBJEXT) \
-pop3_list.$(OBJEXT) imap_open.$(OBJEXT) imap_fetch_header.$(OBJEXT) imap_delete.$(OBJEXT) \
+pop3_list.$(OBJEXT) imap_open.$(OBJEXT) imap_fetch_header.$(OBJEXT) imap_fetch_size.$(OBJEXT) imap_delete.$(OBJEXT) \
 imap_expunge.$(OBJEXT) imap_close.$(OBJEXT) get_parameter.$(OBJEXT) \
 open_ssl.$(OBJEXT) close_ssl.$(OBJEXT) read_ssl.$(OBJEXT) write_ssl.$(OBJEXT) open_socks5.$(OBJEXT) set_debug.$(OBJEXT)
 	$(CC) -shared -o libshowmail.$(SOEXT) $(LDFLAGS) \
@@ -58,9 +58,10 @@ open_ssl.$(OBJEXT) close_ssl.$(OBJEXT) read_ssl.$(OBJEXT) write_ssl.$(OBJEXT) op
                       pop3_open.$(OBJEXT) pop3_stat.$(OBJEXT) pop3_top.$(OBJEXT) pop3_close.$(OBJEXT) \
                       scan_header.$(OBJEXT) pop3_dele.$(OBJEXT) pop3_rset.$(OBJEXT) \
                       pop3_list.$(OBJEXT) imap_open.$(OBJEXT) imap_fetch_header.$(OBJEXT) \
-                      imap_delete.$(OBJEXT) imap_expunge.$(OBJEXT) imap_close.$(OBJEXT) \
-                      get_parameter.$(OBJEXT) open_ssl.$(OBJEXT) close_ssl.$(OBJEXT) read_ssl.$(OBJEXT) \
-                      write_ssl.$(OBJEXT) open_socks5.$(OBJEXT) set_debug.$(OBJEXT) $(LIBS)
+                      imap_fetch_size.$(OBJEXT) imap_delete.$(OBJEXT) imap_expunge.$(OBJEXT) \
+                      imap_close.$(OBJEXT) get_parameter.$(OBJEXT) open_ssl.$(OBJEXT) close_ssl.$(OBJEXT) \
+                      read_ssl.$(OBJEXT) write_ssl.$(OBJEXT) open_socks5.$(OBJEXT) set_debug.$(OBJEXT) \
+                      $(LIBS)
 
 main.$(OBJEXT): main.c showmail.h config.h
 	$(CC) $(CFLAGS) -c -Wall main.c
@@ -91,6 +92,9 @@ imap_open.$(OBJEXT): imap_open.c showmail.h config.h
 
 imap_fetch_header.$(OBJEXT): imap_fetch_header.c showmail.h config.h
 	$(CC) $(CFLAGS) -c -Wall imap_fetch_header.c
+
+imap_fetch_size.$(OBJEXT): imap_fetch_size.c showmail.h config.h
+	$(CC) $(CFLAGS) -c -Wall imap_fetch_size.c
 
 imap_delete.$(OBJEXT): imap_delete.c showmail.h config.h
 	$(CC) $(CFLAGS) -c -Wall imap_delete.c

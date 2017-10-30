@@ -18,6 +18,7 @@ int main ( int argc , char **argv )
 	int top_status ;
 	int fetch_status ;
 	int list_status ;
+	int size_status ;
 	int size ;
 	char server [MAXSTRING] ;
 	char protocol [MAXSTRING] ;
@@ -95,6 +96,14 @@ int main ( int argc , char **argv )
                         		strcpy ( this_header , "Date: ???" ) ;
                         	printf("  %s\n" , this_header ) ;
                 	
+                        	size_status = imap_fetch_size ( this_socket , 
+                        	                          counter , &size ) ;
+                	
+                        	if ( size_status == POP3_SUCCESS )
+                        		printf ( "  Size: %d bytes\n" , size ) ;
+                        	else
+                        		printf ( "  Size: ???\n" ) ;
+                
                         	if ( feature[0] == 'd' )
                         	{
                         		printf ( "Delete this message? (y/[n]) " ) ;

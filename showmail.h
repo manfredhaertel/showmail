@@ -92,6 +92,7 @@ int pop3_rset ( int this_socket ) ;
 int pop3_list ( int this_socket , int index , int *size ) ;
 int imap_open ( char *host , char *protocol , char *user , char *password , int *number_of_mails ) ;
 int imap_fetch_header ( int this_socket , int index , char *header ) ;
+int imap_fetch_size ( int this_socket , int index , int *size ) ;
 int imap_delete ( int this_socket , int index ) ;
 int imap_expunge ( int this_socket ) ;
 void imap_close ( int this_socket ) ;
