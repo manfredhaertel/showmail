@@ -9,9 +9,8 @@ and  for each mail sender, subject, sending date and size and, optionally,
 asks you to if you want to delete this message directly on the server.
 
 showmail had a strong focus on pop3 from the beginning. However, starting
-with showmail 10.0, I implemented also imap support, with some small
-limitations in version 10.0, which will probably disappear during the
-next minor releases.
+with showmail 10.0, I implemented also imap support, and this was
+completed in showmail 10.3 .
 
 Using imap, there is also support for different folders than the Inbox.
 Just append the greater sign and the folder name to the username, e.g.
@@ -26,11 +25,11 @@ it runs natively under Windows and can be compiled by the MinGW compiler.
 
 Starting with showmail 6.0 there is finally SSL support!
 
-NOTE: If you use the normal pop3 service (port 110), your password and your
-mails are sent in plain text over the Internet. When using the pop3s service 
-(port 995), the whole communication is encrypted, so this is now the 
+NOTE: If you use the unencrypted protocols, your password and your
+mails are sent in plain text over the Internet. When using pop3s or imaps, 
+the whole communication is encrypted, so this is the 
 recommended way to use showmail (and it's only about half a second slower).
-Ask your email provider to support pop3s!
+Ask your email provider to support pop3s or imaps!
 
 IMPORTANT NOTE: You will need OpenSSL on your system for showmail to
 compile. Because SSL is now the recommended way to use showmail, I decided
@@ -65,7 +64,7 @@ firewall with a SOCKS5 server. Ask your firewall admin to configure it to
 give you access to your POP server.
 
 You have to specify the node name of the socks server, followed by a greater 
-sign, followed by the node name of the actual pop3 server. Port socks (1080)
+sign, followed by the node name of the actual mail server. Port socks (1080)
 is assumed on the socks server as default, if your socks server uses another
 port you can specify it after the socks server name, separated by a colon.
 
@@ -115,6 +114,10 @@ console application showmail.exe is compatible to the Linux version. And of
 course, the source code can still be cross compiled under Linux with a MinGW
 cross compiler.
 
+In showmail 10.3 I did a rewrite of winshowmail. It now starts the
+console application in the background and display its output in a
+window, rather than duplicating its behaviour.
+
 For building, simply do 'configure', 'make' and 'make install' and you can 
 run the program.
 
@@ -124,7 +127,7 @@ directories. Do this as root to be sure you have the required privileges.
 The program takes five parameters:
 
 - server: the mail server, probably at your internet provider
-- protocol: currently only pop3 is supported
+- protocol: pop3, pop3s, imap or imaps
 - user: your username on the mail server
 - password: your password on the mail server
 - feature: show or delete
@@ -173,7 +176,7 @@ defaults. If a parameter is specified neither on the command line nor
 in the resource file, you are prompted for this parameter. If prompting
 is used for a password, echoing is disabled.
 
-showmail has three features, which you can specify as the fifth parameter: 
+showmail has two features, which you can specify as the fifth parameter: 
 show and delete.
 
 "show" simply shows you the most important headers of the mails which
@@ -189,11 +192,10 @@ Thanks to John R. Schrader for many suggestions.
 
 PLEASE NOTE:
 
-- pop3s is the recommended way to use showmail. If you continue to use pop3,
-  it's your decision.
+- pop3s and imaps are the recommended ways to use showmail. If you continue 
+  to use pop3 or imap, it's your decision.
 - protocol names should be given as contained in /etc/services, normally
-  pop3 or pop3s (however, if they are not, pop3 and pop3s are mapped to 110
-  and 995, respectively)
+  pop3, pop3s, imap or imaps
 - use debug carefully because the whole communication process is
   displayed, including the password
 - you are responsible for specifying a password in clear text on the

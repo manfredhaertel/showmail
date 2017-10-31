@@ -38,131 +38,115 @@ int text_height ;
 
 void get_info ( void ) 
 {
-        int this_socket ;
-        int number_of_mails ;
-        int total_size ;
+        SECURITY_ATTRIBUTES saAttr ;
+        HANDLE hChildStd_IN_Rd = NULL ;
+        HANDLE hChildStd_IN_Wr = NULL ;
+        HANDLE hChildStd_OUT_Rd = NULL ;
+        HANDLE hChildStd_OUT_Wr = NULL ;
+        CHAR szCmdline [MAXSTRING] ;
+        PROCESS_INFORMATION piProcInfo ; 
+        STARTUPINFO siStartInfo ;
+        BOOL bSuccess = FALSE ;
+        DWORD dwRead , dwWritten ; 
+        CHAR chBuf [MAXBUF] ;
         int counter ;
-        char header [MAXBUF] ;
-        char this_header [MAXSTRING] ;
-        int top_status ;
-        int list_status ;
-        int size ;
-        
-        /* before the query is finished, we have no lines */
-        
-        lastline = -1 ;
-
-	/* establish connection */
-
-	this_socket = pop3_open ( server , protocol , user , password ) ;
-
-	/* message if this does not work */
-	
-	if ( this_socket == SOCKET_ERROR )
-	{
-		lastline ++ ;
-		if ( lastline < MAXLINES )
-			sprintf ( output [lastline] ,
-			"could not establish connection to pop3 server." ) ;
-   		scroll_position = 0 ;
-		InvalidateRgn ( output_window , 0 , TRUE ) ;
-		UpdateWindow ( output_window ) ;        
-		return ;
-	}
-	
-	/* get number of mails */
-	
-	pop3_stat ( this_socket , &number_of_mails , &total_size ) ;
-	
-	lastline ++ ;
-	if ( lastline < MAXLINES )
-		sprintf ( output [lastline] ,
-			 "%d message(s) with a total of %d bytes are waiting" ,
-		 	  number_of_mails , total_size ) ;
-
-	/* get headers and display items */
-		 
-        for ( counter = 1 ; counter <= number_of_mails ; counter++ )
-        {
-		top_status = pop3_top ( this_socket , counter , header ) ;
-		
-		if ( top_status == POP3_SUCCESS )
-		{
-			lastline ++ ;
-			if ( lastline < MAXLINES )
-                		sprintf ( output [lastline] , "%s" , "" ) ;
-                	lastline ++ ;
-                	if ( lastline < MAXLINES )
-                		sprintf ( output [lastline] ,
-                			  "Message #%d:" , counter ) ;
+        int offset ;
                 
-                	scan_header ( header , "From" , this_header ) ;
-                	if ( strlen ( this_header ) == 0 )
-                		strcpy ( this_header , "From: ???" ) ;
-			lastline ++ ;
-			if ( lastline < MAXLINES )
-                		sprintf ( output [lastline] , 
-                			  "        %s" , this_header ) ;
+        /* before the query is finished, we have no lines */
 
-                	scan_header ( header , "Subject" , this_header ) ;
-                	if ( strlen ( this_header ) == 0 )
-                		strcpy ( this_header , "Subject: ???" ) ;
-                	lastline ++ ;
-                	if ( lastline < MAXLINES )
-                		sprintf ( output [lastline] , 
-                			  "        %s" , this_header ) ;
+        lastline = -1 ; 
+        
+        /* get the infos from the console application */
 
-                	scan_header ( header , "Date" , this_header ) ;
-                	if ( strlen ( this_header ) == 0 )
-                		strcpy ( this_header , "Date: ???" ) ;
-                	lastline ++ ;
-                	if ( lastline < MAXLINES )
-                		sprintf ( output [lastline] , 
-                			  "        %s" , this_header ) ;
-                	
-                	list_status = pop3_list ( this_socket , 
-                	                          counter , &size ) ;
-                	
-                	if ( list_status == POP3_SUCCESS )
-                	{
-                		lastline ++ ;
-                		if ( lastline < MAXLINES )
-                			sprintf ( output [lastline] , 
-                			    "        Size: %d bytes" , size ) ;
-			}
-                	else
-                	{
-                		lastline ++ ;
-                		if ( lastline < MAXLINES )
-                			sprintf ( output [lastline] ,
-                				  "        Size: ???" ) ;
-                	}
-                }
-                else
-                {
-                	/* if top does not work, give an error message */
-                	
-			lastline ++ ;
-			if ( lastline < MAXLINES )
-                		sprintf ( output [lastline] , "%s" , "" ) ;
-                	lastline ++ ;
-                	if ( lastline < MAXLINES )
-                		sprintf ( output [lastline] ,
-                			 "Message #%d could not be obtained." ,
-                		  	  counter ) ;
-                }
+        saAttr.nLength = sizeof(SECURITY_ATTRIBUTES); 
+        saAttr.bInheritHandle = TRUE; 
+        saAttr.lpSecurityDescriptor = NULL; 
+ 
+        CreatePipe ( &hChildStd_OUT_Rd , &hChildStd_OUT_Wr , &saAttr , 0 ) ;
+        SetHandleInformation ( hChildStd_OUT_Rd , HANDLE_FLAG_INHERIT , 0 ) ;
+
+        CreatePipe ( &hChildStd_IN_Rd , &hChildStd_IN_Wr , &saAttr , 0 ) ; 
+        SetHandleInformation ( hChildStd_IN_Wr , HANDLE_FLAG_INHERIT , 0 ) ;
+
+        ZeroMemory ( &piProcInfo , sizeof ( PROCESS_INFORMATION ) ) ;
+        
+        ZeroMemory ( &siStartInfo , sizeof ( STARTUPINFO ) ) ;
+        siStartInfo.cb = sizeof ( STARTUPINFO ) ;
+        siStartInfo.hStdError = hChildStd_OUT_Wr ;
+        siStartInfo.hStdOutput = hChildStd_OUT_Wr ;
+        siStartInfo.hStdInput = hChildStd_IN_Rd ;
+        siStartInfo.dwFlags |= STARTF_USESTDHANDLES ;
+        
+        sprintf ( szCmdline , "showmail %s %s %s - %s" , 
+                  server , protocol , user , feature ) ;
+        
+        bSuccess = CreateProcess ( NULL , szCmdline , NULL , NULL , TRUE , 0 , NULL , NULL ,
+                                   &siStartInfo , &piProcInfo ) ;
+        if ( ! bSuccess )
+        {
+                MessageBox ( (HWND) 0 , (LPSTR) "could not start showmail.exe" ,
+                             (LPSTR) "Error" , MB_OK ) ;                
+                return ;
+        }
+
+        /* close unneeded handles */
+
+        CloseHandle ( hChildStd_OUT_Wr ) ;
+        CloseHandle ( hChildStd_IN_Rd ) ;
+        CloseHandle ( piProcInfo.hProcess ) ;
+        CloseHandle ( piProcInfo.hThread ) ;
+        
+        /* send password */
+
+        sprintf ( chBuf , "%s\r\n" , password ) ;
+        bSuccess = WriteFile ( hChildStd_IN_Wr , chBuf , strlen ( chBuf ) , &dwWritten , NULL ) ;
+        if ( ! bSuccess )
+        {
+                MessageBox ( (HWND) 0 , (LPSTR) "could not send password to showmail.exe" ,
+                             (LPSTR) "Error" , MB_OK ) ;
+                return ;
         }
         
-        pop3_close ( this_socket ) ;
+        /* read response */
         
-	/* init scrolling information */
+        offset = 0 ;
+        lastline = 0 ;
+        do
+        {
+                bSuccess = ReadFile ( hChildStd_OUT_Rd , chBuf , MAXBUF , &dwRead , NULL ) ;
+                if ( bSuccess && ( dwRead > 0 ) )
+                {
+                        for ( counter = 0 ; counter < dwRead ; counter ++ )
+                        {
+                                if ( chBuf[counter] != '\n' )
+                                {
+                                        output[lastline][offset] = chBuf[counter] ;
+                                        offset ++ ;         
+                                }
+                                else
+                                {
+                                        lastline ++ ;
+                                        offset = 0 ;
+                                }
+                        }
+                }
+        }
+        while ( bSuccess && ( dwRead > 0 ) ) ;
+        lastline -- ;
+        
+        /* close handles */
+        
+        CloseHandle ( hChildStd_IN_Wr ) ;
+        CloseHandle ( hChildStd_OUT_Rd ) ;
+        
+        /* init scrolling information */
 
    	scroll_position = 0 ;
 
         /* update main window */
 
 	InvalidateRgn ( output_window , 0 , TRUE ) ;
-	UpdateWindow ( output_window ) ;        
+	UpdateWindow ( output_window ) ;                
 }
 
 /* function Dlg_Proc - callback for the dialogs */
@@ -170,7 +154,7 @@ void get_info ( void )
 LRESULT CALLBACK DlgProc ( HWND hWnd , UINT msg , WPARAM wParam , 
                            LPARAM lParam )
 {
-	HWND server_control ;
+        HWND server_control ;
 	HWND protocol_control ;
 	HWND user_control ;
 	HWND password_control ;

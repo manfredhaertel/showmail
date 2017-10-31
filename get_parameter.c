@@ -221,15 +221,26 @@ void get_parameter ( int argc , char **argv ,
 #ifdef HAVE_GETCH
 		/* Windows */
 
-		pwoffset = 0 ;
-		do
+		if ( isatty ( STDIN_FILENO ) )
 		{
-			password[pwoffset] = getch () ;
-			pwoffset ++ ;
+		        /* if stdin is a tty, read password hidden */
+		        
+		        pwoffset = 0 ;
+		        do
+		        {
+			        password[pwoffset] = getch () ;
+			        pwoffset ++ ;
+                        }
+                        while ( ( password[pwoffset-1] != '\r' ) && 
+                        	( pwoffset < MAXSTRING - 1 ) ) ;
+	        	password[pwoffset] = '\0' ;
                 }
-                while ( ( password[pwoffset-1] != '\r' ) && 
-                	( pwoffset < MAXSTRING - 1 ) ) ;
-		password[pwoffset] = '\0' ;
+                else
+                {
+                        /* if stdin is not a tty, read password normally */
+                        
+                        fgets ( password , MAXSTRING-1 , stdin ) ;
+                }
 #else
 #error No password routine implemented for your environment
 #endif
