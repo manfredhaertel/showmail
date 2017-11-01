@@ -118,15 +118,22 @@ void get_info ( void )
                 {
                         for ( counter = 0 ; counter < dwRead ; counter ++ )
                         {
-                                if ( chBuf[counter] != '\n' )
+                                if ( lastline < MAXLINES )
                                 {
-                                        output[lastline][offset] = chBuf[counter] ;
-                                        offset ++ ;         
-                                }
-                                else
-                                {
-                                        lastline ++ ;
-                                        offset = 0 ;
+                                        if ( chBuf[counter] != '\n' )
+                                        {
+                                                if ( offset < MAXSTRING - 1 )
+                                                {
+                                                        output[lastline][offset] = chBuf[counter] ;
+                                                        offset ++ ;
+                                                }         
+                                        }
+                                        else
+                                        {
+                                                output[lastline][offset] = '\0' ;
+                                                lastline ++ ;
+                                                offset = 0 ;
+                                        }
                                 }
                         }
                 }
@@ -146,7 +153,7 @@ void get_info ( void )
         /* update main window */
 
 	InvalidateRgn ( output_window , 0 , TRUE ) ;
-	UpdateWindow ( output_window ) ;                
+	UpdateWindow ( output_window ) ;
 }
 
 /* function Dlg_Proc - callback for the dialogs */
