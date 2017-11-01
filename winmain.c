@@ -131,7 +131,9 @@ void get_info ( void )
                                         else
                                         {
                                                 output[lastline][offset] = '\0' ;
-                                                lastline ++ ;
+                                                if ( strncmp ( output[lastline] , "Password:" ,
+                                                               strlen ( "Password:" ) ) != 0 )
+                                                               lastline ++ ;
                                                 offset = 0 ;
                                         }
                                 }
