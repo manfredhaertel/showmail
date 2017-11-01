@@ -246,6 +246,7 @@ LRESULT CALLBACK WndProc ( HWND wnd , UINT msg , WPARAM w , LPARAM l )
     	int old_scroll_position ;
     	int first ;
     	int last ;
+    	HFONT hFont ;
     
     	switch ( msg )
     	{
@@ -295,10 +296,15 @@ LRESULT CALLBACK WndProc ( HWND wnd , UINT msg , WPARAM w , LPARAM l )
 			/* do the actual output */
 
 			output_window = wnd ;
+    			dc = BeginPaint ( wnd , &ps ) ;
+    			
+    			/* select a fixed font */
+    			
+    			hFont = (HFONT) GetStockObject ( ANSI_FIXED_FONT ) ;
+    			SelectObject ( dc , hFont ) ;
 			
 			/* get informations about text size */
 
-    			dc = BeginPaint ( wnd , &ps ) ;
     			GetTextMetrics ( dc , &tm ) ;
     	
     			text_height = tm.tmHeight ;
