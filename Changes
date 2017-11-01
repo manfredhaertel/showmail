@@ -88,3 +88,5 @@ v10.1 30.10.2017  improved handling of imap errors
                   imap examples in README given
                   implemented deleting over imap
 v10.2 31.10.2017  implemented message size over imap
+v10.3 01.11.2017  winshowmail rewritten, now calls showmail binary
+                  use a fixed font for winshowmail
