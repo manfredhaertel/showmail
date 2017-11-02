@@ -239,7 +239,10 @@ int imap_open ( char *host , char *protocol , char *user , char *password , int 
                      ( strstr ( buffer , errorstring2 ) != NULL ) ||
                      ( strncmp ( buffer , errorstring1 + 2 , strlen ( errorstring1 ) - 2 ) == 0 ) ||
                      ( strncmp ( buffer , errorstring2 + 2 , strlen ( errorstring2 ) - 2 ) == 0 ) )
+                {
+                        printf ( "selecting folder %s failed\n" , folder ) ;
                 	return SHOWMAIL_SOCKET_ERROR ;
+                }
 	}
 	while ( ( strstr ( buffer , okstring ) == NULL ) && 
 	        ( strlen ( buffer ) < MAXBUF - 1 ) ) ;
