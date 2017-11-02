@@ -12,7 +12,7 @@ int imap_fetch_header ( int this_socket , int index , char *header )
 
 	/* ask for the headers */
 		
-	sprintf ( fetchstring , "a%03d fetch %d body[header]" , imap_seq_number , index ) ;
+	sprintf ( fetchstring , "a%03d fetch %d body.peek[header.fields (From Subject Date)]" , imap_seq_number , index ) ;
 	sprintf ( okstring , "a%03d OK " , imap_seq_number ) ;
 	sprintf ( errorstring1 , "\r\na%03d NO " , imap_seq_number ) ;
 	sprintf ( errorstring2 , "\r\na%03d BAD " , imap_seq_number ) ;
