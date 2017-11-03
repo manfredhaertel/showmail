@@ -33,6 +33,10 @@ int main ( int argc , char **argv )
 	debug = ( argc == 7 ) ;
 	set_debug ( debug ) ;
 	
+	/* check version very early */
+	
+	check_version ( PACKAGE_VERSION ) ;
+
 	/* announce */
 	
 	printf ( "%s V%s by Manfred Haertel\n\n" , PACKAGE_NAME , 

@@ -53,7 +53,7 @@ pop3_stat.$(OBJEXT) pop3_top.$(OBJEXT) pop3_close.$(OBJEXT) scan_header.$(OBJEXT
 pop3_list.$(OBJEXT) imap_open.$(OBJEXT) imap_fetch_header.$(OBJEXT) imap_fetch_size.$(OBJEXT) imap_delete.$(OBJEXT) \
 imap_expunge.$(OBJEXT) imap_close.$(OBJEXT) get_parameter.$(OBJEXT) \
 open_ssl.$(OBJEXT) close_ssl.$(OBJEXT) read_ssl.$(OBJEXT) write_ssl.$(OBJEXT) open_socks5.$(OBJEXT) set_debug.$(OBJEXT) \
-read_response.$(OBJEXT)
+read_response.$(OBJEXT) check_version.$(OBJEXT)
 	$(CC) -shared -o libshowmail.$(SOEXT) $(LDFLAGS) \
                       open_socket.$(OBJEXT) write_socket.$(OBJEXT) read_socket.$(OBJEXT) \
                       pop3_open.$(OBJEXT) pop3_stat.$(OBJEXT) pop3_top.$(OBJEXT) pop3_close.$(OBJEXT) \
@@ -62,7 +62,7 @@ read_response.$(OBJEXT)
                       imap_fetch_size.$(OBJEXT) imap_delete.$(OBJEXT) imap_expunge.$(OBJEXT) \
                       imap_close.$(OBJEXT) get_parameter.$(OBJEXT) open_ssl.$(OBJEXT) close_ssl.$(OBJEXT) \
                       read_ssl.$(OBJEXT) write_ssl.$(OBJEXT) open_socks5.$(OBJEXT) set_debug.$(OBJEXT) \
-                      read_response.$(OBJEXT) $(LIBS)
+                      read_response.$(OBJEXT) check_version.$(OBJEXT) $(LIBS)
 
 main.$(OBJEXT): main.c showmail.h config.h
 	$(CC) $(CFLAGS) -c -Wall main.c
@@ -147,6 +147,9 @@ set_debug.$(OBJEXT): set_debug.c showmail.h config.h
 
 read_response.$(OBJEXT): read_response.c showmail.h config.h
 	$(CC) $(CFLAGS) -c -Wall read_response.c
+
+check_version.$(OBJEXT): check_version.c showmail.h config.h
+	$(CC) $(CFLAGS) -c -Wall check_version.c
 
 clean:
 	rm -rf showmail showmail.exe *.o *.obj *.a *.so *.dll *~ core \

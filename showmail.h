@@ -106,6 +106,7 @@ void write_ssl ( SSL *ssl_connection , char *buffer ) ;
 int open_socks5 ( int this_socket , char *dns_name , char *service_name ) ;
 void set_debug ( int debug_value ) ;
 int read_response ( int this_socket , SSL *this_ssl_connection , int is_ssl , char *buffer , char *okstring_any , char *okstring_end , char *errorstring1 , char *errorstring2 ) ;
+void check_version ( char *binary_version ) ;
 
 /* global variables */
 
