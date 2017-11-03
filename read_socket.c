@@ -18,9 +18,8 @@ void read_socket ( int this_socket , char *buffer , int size_of_buffer )
 
 	if ( number_of_bytes <= 0 )
 	{
-		if ( debug )
-			printf ( "cannot read from socket.\n" ) ;
-		strcpy ( buffer , "" ) ;
+		printf ( "reading from socket failed, terminating..." ) ;
+		exit ( 1 ) ;
 	}	
 	
 	/* zero terminate to have a clean c language string */

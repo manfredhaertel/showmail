@@ -197,13 +197,12 @@ int pop3_open ( char *host , char *protocol , char *user , char *password )
 		read_socket ( this_socket , buffer , sizeof ( buffer ) ) ;
 	}
 
-	/* if there is no okay message now, authorization failed. then
+	/* if there is no okay message now, authentication failed. then
            it's time to say goodbye */
 
 	if ( strncmp ( buffer , "+OK" , 3 ) != 0 )
 	{
-		if ( debug )
-			printf ( "authorization failed.\n" ) ;
+                printf ( "authentication failed.\n" ) ;
 			
 		pop3_close ( this_socket ) ;
 	        

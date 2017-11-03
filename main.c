@@ -25,6 +25,7 @@ int main ( int argc , char **argv )
 	char user [MAXSTRING] ;
 	char password [MAXSTRING] ;
 	char feature [MAXSTRING] ;
+	int num_deleted ;
 
 	/* if there is any sixth parameter then assume that debugging
            is desired */	
@@ -52,6 +53,7 @@ int main ( int argc , char **argv )
                 /* imap */
 
                 imap_seq_number = 1 ;
+                num_deleted = 0 ;
 
         	/* establish connection */
 	
@@ -114,7 +116,10 @@ int main ( int argc , char **argv )
                         			        imap_delete ( this_socket , counter ) ;
                 			
                         			if ( delete_status == IMAP_SUCCESS )
+                        			{
                         			        printf ( "Message deleted!\n" ) ;
+                        			        num_deleted ++ ;
+                                                }
                         			else
                         				printf ( "Message could NOT be deleted!!!\n" ) ;
                         		}
@@ -131,7 +136,7 @@ int main ( int argc , char **argv )
                 
                 /* if message were deleted, purge them from the mailbox now */
                 
-                if ( feature[0] == 'd' )
+                if ( ( feature[0] == 'd' ) && ( num_deleted > 0 ) )
                         imap_expunge ( this_socket ) ;
         
                 imap_close ( this_socket ) ;

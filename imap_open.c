@@ -19,6 +19,7 @@ int imap_open ( char *host , char *protocol , char *user , char *password , int 
 	int stls ;
 	char *pointer ;
 	char folder [MAXSTRING] ;
+	int status ;
 
 #ifdef HAVE_WINSOCK_H
 	/* initialize winsock */
@@ -190,13 +191,12 @@ int imap_open ( char *host , char *protocol , char *user , char *password , int 
 		read_socket ( this_socket , buffer , sizeof ( buffer ) ) ;
 	}
 
-	/* if there is no okay message now, authorization failed. then
+	/* if there is no okay message now, authentication failed. then
            it's time to say goodbye */
 
 	if ( strncmp ( buffer , okstring , strlen ( okstring ) ) != 0 )
 	{
-		if ( debug )
-			printf ( "authorization failed.\n" ) ;
+                printf ( "authentication failed.\n" ) ;
 			
 		imap_close ( this_socket ) ;
 	        
@@ -206,9 +206,9 @@ int imap_open ( char *host , char *protocol , char *user , char *password , int 
 	/* select inbox (or other folder) */
 	
 	sprintf ( selectstring , "a%03d select %s" , imap_seq_number , folder ) ;
-        sprintf ( okstring , "a%03d OK " , imap_seq_number ) ;
-        sprintf ( errorstring1 , "\r\na%03d NO " , imap_seq_number ) ;                
-        sprintf ( errorstring2 , "\r\na%03d BAD " , imap_seq_number ) ;                
+        sprintf ( okstring , "\r\na%03d OK " , imap_seq_number ) ;
+        sprintf ( errorstring1 , "a%03d NO " , imap_seq_number ) ;                
+        sprintf ( errorstring2 , "a%03d BAD " , imap_seq_number ) ;                
 	imap_seq_number ++ ;
 	
 	if ( is_imaps )
@@ -220,32 +220,13 @@ int imap_open ( char *host , char *protocol , char *user , char *password , int 
 		write_socket ( this_socket , selectstring ) ;
 	}
 
-	strcpy ( buffer , "" ) ;
-
-	do
-	{
-		if ( is_imaps )
-			read_ssl ( this_ssl_connection , 
-                                   buffer + strlen ( buffer ) , 
-                                   sizeof ( buffer ) - strlen ( buffer ) ) ;
-                else
-			read_socket ( this_socket , 
-                                      buffer + strlen ( buffer ) , 
-                                      sizeof ( buffer ) - strlen ( buffer ) ) ;
-                              
-                /* return error code if this command fails */
-                
-                if ( ( strstr ( buffer , errorstring1 ) != NULL ) ||
-                     ( strstr ( buffer , errorstring2 ) != NULL ) ||
-                     ( strncmp ( buffer , errorstring1 + 2 , strlen ( errorstring1 ) - 2 ) == 0 ) ||
-                     ( strncmp ( buffer , errorstring2 + 2 , strlen ( errorstring2 ) - 2 ) == 0 ) )
-                {
-                        printf ( "selecting folder %s failed\n" , folder ) ;
-                	return SHOWMAIL_SOCKET_ERROR ;
-                }
-	}
-	while ( ( strstr ( buffer , okstring ) == NULL ) && 
-	        ( strlen ( buffer ) < MAXBUF - 1 ) ) ;
+	status = read_response ( this_socket , this_ssl_connection , is_imaps ,
+	        buffer , okstring , NULL , errorstring1 , errorstring2 ) ;
+        if ( status == RESPONSE_ERROR )
+        {
+                printf ( "selecting folder %s failed\n" , folder ) ;
+                return SHOWMAIL_SOCKET_ERROR ;
+        }
 
 	/* get number of mails */
 	

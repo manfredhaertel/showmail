@@ -61,7 +61,7 @@
 
 /* defines */
 
-#define MAXBUF 10000
+#define MAXBUF 20000
 #define MAXSTRING 256
 #define SHOWMAIL_SOCKET_SUCCESS 0
 #define SHOWMAIL_SOCKET_ERROR -1
@@ -69,6 +69,8 @@
 #define POP3_ERROR -1
 #define IMAP_SUCCESS 0
 #define IMAP_ERROR -1
+#define RESPONSE_SUCCESS 0
+#define RESPONSE_ERROR -1
 #define CR '\r'
 #define LF '\n'
 #define TAB '\t'
@@ -103,6 +105,7 @@ void read_ssl ( SSL *ssl_connection , char *buffer , int size_of_buffer ) ;
 void write_ssl ( SSL *ssl_connection , char *buffer ) ;
 int open_socks5 ( int this_socket , char *dns_name , char *service_name ) ;
 void set_debug ( int debug_value ) ;
+int read_response ( int this_socket , SSL *this_ssl_connection , int is_ssl , char *buffer , char *okstring_any , char *okstring_end , char *errorstring1 , char *errorstring2 ) ;
 
 /* global variables */
 
