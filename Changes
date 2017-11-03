@@ -90,3 +90,9 @@ v10.1 30.10.2017  improved handling of imap errors
 v10.2 31.10.2017  implemented message size over imap
 v10.3 01.11.2017  winshowmail rewritten, now calls showmail binary
                   use a fixed font for winshowmail
+v10.4 03.11.2017  avoid password prompt to appear in winshowmail output
+                  don't touch seen flag when looking at headers using imap
+                  give specific error message when selecting a folder 
+                  over imap failed
+                  redesigned reading server responses
+                  implemented version check of binary against library
