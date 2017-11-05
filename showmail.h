@@ -74,6 +74,8 @@
 #define CR '\r'
 #define LF '\n'
 #define TAB '\t'
+#define DO_READ_SOCKET(a,b,c) recv(a,b,c,0)
+#define DO_WRITE_SOCKET(a,b,c) send(a,b,c,0)
 
 #ifndef SSL_CERTS
 #define SSL_CERTS "/etc/ssl/certs"

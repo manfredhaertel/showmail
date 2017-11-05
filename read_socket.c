@@ -12,7 +12,7 @@ void read_socket ( int this_socket , char *buffer , int size_of_buffer )
 
 	/* actually read */
 
-	number_of_bytes = read ( this_socket , buffer , size_of_buffer ) ;
+	number_of_bytes = DO_READ_SOCKET ( this_socket , buffer , size_of_buffer ) ;
 	
 	/* error check */
 

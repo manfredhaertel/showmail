@@ -18,7 +18,7 @@ void write_socket ( int this_socket , char *buffer )
 
 	size_of_buffer = strlen ( this_buffer ) ;
 	
-	number_of_bytes = write ( this_socket , this_buffer , size_of_buffer ) ;
+	number_of_bytes = DO_WRITE_SOCKET ( this_socket , this_buffer , size_of_buffer ) ;
 	
 	/* error check */
 
