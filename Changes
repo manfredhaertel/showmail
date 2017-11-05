@@ -96,3 +96,4 @@ v10.4 03.11.2017  avoid password prompt to appear in winshowmail output
                   over imap failed
                   redesigned reading server responses
                   implemented version check of binary against library
+v10.5 05.11.2017  bugfix allowing unencrypted connections under Windows
