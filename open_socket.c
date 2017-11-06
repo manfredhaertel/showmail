@@ -36,6 +36,10 @@ int open_socket ( char *node_name , char *service_name )
 				this_port = htons ( 110 ) ;
 			else if ( strcmp ( service_name , "pop3s" ) == 0 )
 				this_port = htons ( 995 ) ;
+			else if ( strcmp ( service_name , "imap" ) == 0 )
+				this_port = htons ( 143 ) ;
+			else if ( strcmp ( service_name , "imaps" ) == 0 )
+				this_port = htons ( 993 ) ;
 			else
 			{
 				if ( debug )

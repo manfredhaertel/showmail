@@ -32,6 +32,10 @@ int open_socks5 ( int this_socket , char *dns_name , char *service_name )
 				port_number = htons ( 110 ) ;
 			else if ( strcmp ( service_name , "pop3s" ) == 0 )
 				port_number = htons ( 995 ) ;
+			else if ( strcmp ( service_name , "imap" ) == 0 )
+				port_number = htons ( 143 ) ;
+			else if ( strcmp ( service_name , "imaps" ) == 0 )
+				port_number = htons ( 993 ) ;
 			else
 			{
 				if ( debug )
