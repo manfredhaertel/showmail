@@ -51,8 +51,8 @@ int open_socks5 ( int this_socket , char *dns_name , char *service_name )
 	this_buffer [1] = 1 ; /* number of methods */
 	this_buffer [2] = 0 ; /* no authentification */
 	
-	DO_WRITE_SOCKET ( this_socket , this_buffer , 3 ) ;
-	DO_READ_SOCKET ( this_socket , this_buffer , 2 ) ;
+	DO_WRITE_SOCKET ( this_socket , (char *) this_buffer , 3 ) ;
+	DO_READ_SOCKET ( this_socket , (char *) this_buffer , 2 ) ;
 	
 	if ( this_buffer [1] == 255 )
 		return 255 ;
@@ -78,11 +78,11 @@ int open_socks5 ( int this_socket , char *dns_name , char *service_name )
 
 	/* send buffer */
 
-	DO_WRITE_SOCKET ( this_socket , this_buffer , strlen ( dns_name ) + 7 ) ;
+	DO_WRITE_SOCKET ( this_socket , (char *) this_buffer , strlen ( dns_name ) + 7 ) ;
 	
 	/* read response */
 	
-	DO_READ_SOCKET ( this_socket , this_buffer , 100 ) ;
+	DO_READ_SOCKET ( this_socket , (char *) this_buffer , 100 ) ;
 
 	return (int) ( this_buffer [1] ) ;
 }
