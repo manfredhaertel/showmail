@@ -100,3 +100,4 @@ v10.5 05.11.2017  bugfix allowing unencrypted connections under Windows
 v10.6 06.11.2017  added fallback to hardcoded port numbers also for 
                   imap and imaps
                   Windows support also for SOCKS5
+v10.7 11.11.2017  added a cast to compile under Windows without warnings
